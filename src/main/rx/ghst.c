@@ -85,6 +85,7 @@ enum {
     DEBUG_GHST_UNKNOWN_FRAMES,
     DEBUG_GHST_RX_RSSI,
     DEBUG_GHST_RX_LQ,
+    DEBUG_GHST_RX_NUM,
 };
 
 static serialPort_t *serialPort;
@@ -270,6 +271,8 @@ static bool ghstProcessFrame(const rxRuntimeState_t *rxRuntimeState)
 
                     DEBUG_SET(DEBUG_GHST, DEBUG_GHST_RX_RSSI, -rssiFrame->rssi);
                     DEBUG_SET(DEBUG_GHST, DEBUG_GHST_RX_LQ, rssiFrame->lq);
+                    DEBUG_SET(DEBUG_GHST, DEBUG_GHST_RX_NUM, rssiFrame->rxNum);
+                    DEBUG_SET(DEBUG_GHST, DEBUG_GHST_TX_PWR, rssiFrame->txPwrdBm);
 
                     ghstRfProtocol = rssiFrame->rfProtocol;
 
@@ -290,6 +293,7 @@ static bool ghstProcessFrame(const rxRuntimeState_t *rxRuntimeState)
 
 #ifdef USE_RX_RSSI_DBM
                     setRssiDbm(-rssiFrame->rssi, RSSI_SOURCE_RX_PROTOCOL);
+                    setActiveAntenna(rssiFrame->rxNum);
 #endif
 
 #ifdef USE_RX_LINK_QUALITY_INFO
